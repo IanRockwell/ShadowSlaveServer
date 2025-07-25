@@ -7,6 +7,8 @@ This directory contains custom scripts using [Skript](https://github.com/SkriptL
 For Development, you **must** have the following plugins installed on your server:
 
 - **[Skript](https://github.com/SkriptLang/Skript)** (core requirement) (version 2.12.0 or higher recommended)
+  
+  (this repo then gets just put into the /Skript/ folder)
 
 ### Common Skript Addons (required for some scripts):
 - [skUtilities](https://github.com/TPGamesNL/SkUtilities)
