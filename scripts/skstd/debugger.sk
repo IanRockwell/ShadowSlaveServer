@@ -12,3 +12,8 @@ function debug(script: script, message: string):
     if {@debug_mode} is false:
         stop
     send {@debug_msg} to console
+
+command /skitemdb [<text>]:
+    permission: *
+    trigger:
+        send "&eID of your held item: &f%player's tool%"
