@@ -1,0 +1,30 @@
+options:
+    spell_item: itemsadder item "ssitems:spell_access" named "&4&l&k|||&c ☠ &n&lTHE SPELL&c ☠ &4&k|||" with lore "", "&7Click the eye to open &cThe Spell Menu&7.", ""
+
+local function spell_item() :: item:
+    set {_spell_item} to {@spell_item}
+    set item flags of {_spell_item} to hide enchants and hide attributes
+    return {_spell_item}
+
+on join:
+    set slot 8 of player's inventory to spell_item()
+
+on load:
+    set {_item} to spell_item()
+    loop all players:
+        set slot 8 of loop-player's inventory to {_item}
+
+on inventory click:
+    clicked inventory is player's inventory
+    index of clicked slot is 8
+    spell_gui(player)
+    cancel event
+
+on click:
+    player's tool is spell_item()
+    spell_gui(player)
+    cancel event
+
+on drop:
+    event-item is {@spell_item}
+    cancel event

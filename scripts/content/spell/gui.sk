@@ -1,0 +1,15 @@
+function spell_gui(p: player):
+    play sound "block.end_portal.spawn" with volume 0.2 to {_p}
+
+    set {_gui} to chest inventory with 6 rows named ":offset_-16::spell_menu:"
+
+    set slot 22 of {_gui} to {_p}'s skull named "&4&m------------------------" with lore "&cName: &f%{_p}%", "&cAspect: &fN/A", "&cFlaw: &fN/A", "&4&m------------------------"
+    set slot 33 of {_gui} to itemsadder item "ssgui:icon_scroll" named "&4&m------------------------" with lore "&e&nMemories:", "&4&m------------------------"
+    set slot 29 of {_gui} to skeleton skull named "&4&m------------------------" with lore "&f&nEchoes:", "&4&m------------------------"
+
+    open {_gui} to {_p}
+
+on inventory click:
+    name of player's current inventory is ":offset_-16::spell_menu:"
+    cancel event
+    clicked inventory is player's current inventory
