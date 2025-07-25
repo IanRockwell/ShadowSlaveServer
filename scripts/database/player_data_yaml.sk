@@ -32,6 +32,19 @@ function database_player_setvalue(uuid: text, field: text, value: object, save_i
     if {_unload_later} is true:
         unload yaml "player-%{_uuid}%"
 
+function database_player_delvalue(uuid: text, field: text, save_immediently: boolean = false):
+    if yaml "player-%{_uuid}%" is not loaded:
+        set {_unload_later} to true
+        load yaml "{@directory}%{_uuid}%.yml" as "player-%{_uuid}%"
+    
+    delete yaml value {_field} from "player-%{_uuid}%"
+
+    if {_save_immediently} is true:
+        save yaml "player-%{_uuid}%"
+
+    if {_unload_later} is true:
+        unload yaml "player-%{_uuid}%"
+
 function database_player_getvalue(uuid: text, field: text) :: object:
     if yaml "player-%{_uuid}%" is not loaded:
         set {_unload_later} to true
@@ -52,6 +65,19 @@ function database_player_setlist(uuid: text, field: text, value: objects, save_i
     if {_save_immediently} is true:
         save yaml "player-%{_uuid}%"
     
+    if {_unload_later} is true:
+        unload yaml "player-%{_uuid}%"
+
+function database_player_dellist(uuid: text, field: text, save_immediently: boolean = false):
+    if yaml "player-%{_uuid}%" is not loaded:
+        set {_unload_later} to true
+        load yaml "{@directory}%{_uuid}%.yml" as "player-%{_uuid}%"
+    
+    delete yaml list {_field} from "player-%{_uuid}%"
+
+    if {_save_immediently} is true:
+        save yaml "player-%{_uuid}%"
+
     if {_unload_later} is true:
         unload yaml "player-%{_uuid}%"
 

@@ -40,3 +40,24 @@ function sktest_player_overwrite_value():
     set {_result} to database_player_getvalue({_uuid}, {_field})
     assert(script, {_result}, 2, "Should overwrite previous value")
     cleanup_test_files({_uuid})
+
+# Test: Delete a value for a player and ensure it is removed
+function sktest_player_delete_value():
+    set {_uuid} to "T%a random uuid%"
+    set {_field} to "coins"
+    database_player_setvalue({_uuid}, {_field}, 100, true)
+    database_player_delvalue({_uuid}, {_field}, true)
+    set {_result} to database_player_getvalue({_uuid}, {_field})
+    assert(script, "%{_result}%", "<none>", "Should delete the value and return null")
+    cleanup_test_files({_uuid})
+
+# Test: Delete a list for a player and ensure it is removed
+function sktest_player_delete_list():
+    set {_uuid} to "T%a random uuid%"
+    set {_field} to "inventory"
+    set {_list::*} to "apple", "bread"
+    database_player_setlist({_uuid}, {_field}, {_list::*}, true)
+    database_player_dellist({_uuid}, {_field}, true)
+    set {_result::*} to database_player_getlist({_uuid}, {_field})
+    assert(script, "%{_result::*}%", "<none>", "Should delete the list and return empty list")
+    cleanup_test_files({_uuid})
