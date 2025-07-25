@@ -22,8 +22,8 @@ For Development, you **must** have the following plugins installed on your serve
 ## Current Tools & Systems 🛠️
 At least for now, we're still on the stage in which we're making the tools needed for this project to succeed.
 
-- **Custom Unit Testing Framework** - Ensures our scripts are reliable and bug-free
-- **Player Data Management System** - Handles persistent storage and syncing of player information
+- 🧪 **Custom Unit Testing Framework** - Ensures our scripts are reliable and bug-free. (/sktest in-game)
+- 💾 **Player Data Management System** - Handles persistent storage and syncing of player information
 
 ---
 
