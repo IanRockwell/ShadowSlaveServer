@@ -18,6 +18,7 @@ For Development, you **must** have the following plugins installed on your serve
 - [SkCheese](https://github.com/APickledCheese/SkCheese)
 - [SkJson](https://github.com/Southen/SkJson)
 - [ItemsAdder](https://www.spigotmc.org/resources/itemsadder.73355/) (Requires [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/))
+- [skript-itemsadder](https://github.com/Asleeepp/skript-itemsadder/)
 
 ---
 
