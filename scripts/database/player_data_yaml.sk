@@ -2,6 +2,8 @@
 # Handles loading, saving, and managing player data in YAML files for Skript scripts.
 # Provides utility functions for setting and getting player data fields and lists.
 # Developed for persistent player storage. Developed by @Zabrid.
+#
+# If needed, this should be very easily migrated to MongoDB in the future
 
 options:
     directory: plugins/Skript/scripts/database/data/ # Directory where player YAML files are stored
