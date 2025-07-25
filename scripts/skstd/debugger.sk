@@ -1,0 +1,14 @@
+# Debugger Utility
+# A lightweight debugging system for Skript scripts with configurable output
+# and conditional execution. Developed by @Zabrid.
+#
+# Not sure if I'll ever actually use this, thought it could be helpful tho
+
+options:
+    debug_mode: true
+    debug_msg:"&6[DEBUG] &e%{_script}%&8: &f%{_message}%"
+
+function debug(script: script, message: string):
+    if {@debug_mode} is false:
+        stop
+    send {@debug_msg} to console

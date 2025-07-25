@@ -1,0 +1,89 @@
+# Testing Framework
+# A comprehensive testing system for Skript scripts with assertion capabilities,
+# test discovery, and detailed reporting. Developed by @Zabrid.
+
+options:
+
+    # Assertion messages
+    assert_message: "%{_script}% assert %{-current_test::assert_number}%: %{_message}% (%{_value1}% != %{_value2}%)"
+    fail_assert_message: "&6    %loop-value-2%"
+
+    # Test run status messages
+    running_tests_message: "&8Running Tests..."
+    fail_suite_message: "&4  [FAIL] &8(&7%{-current_test}%&8)"
+
+    # Test suite summary messages
+    suite_summary_message: "&e&l[=] Ran %{_tests} ? 0% test(s) in %{_suite_time}%..."
+    all_passed_message: "&a&l[+] All tests passed"
+    failed_count_message: "&c&l[x] %{_test_results::failed} ? 0%/%{_tests}% test(s) failed"
+    empty_line_message: ""
+
+
+
+# Command to run all sktest tests
+command /sktest [<text>]:
+    description: Run any test functions with the sktest_ prefix.
+    permission: *
+    trigger:
+        run_tests(sender)
+
+# Simple assertion function for tests
+function assert(script: script, value1: object, value2: object, message: text = ""):
+    set {-current_test::assert_number} to ({-current_test::assert_number} ? 0) + 1
+    if {_value1} is not {_value2}:
+        add {@assert_message} to {-current_test::failed_asserts::*}
+
+# Retrieves all functions prefixed with "sktest_" from scripts directory
+local function retrieve_test_functions() :: strings:
+    # This is inefficient but works for now. Consider optimizing later
+    set {_skfiles::*} to files in directory including sub directories "plugins/Skript/scripts"
+    loop {_skfiles::*} where ["%input's file contents%" contains "function sktest_"]:
+        loop loop-value's file contents where [input starts with "function sktest_"]:
+            add loop-value-2 to {_tests::*}
+    return {_tests::*}
+
+# Runs all discovered test functions and reports results to sender
+local function run_tests(sender: sender):
+    set {_tests::*} to retrieve_test_functions()
+    send {@running_tests_message} to {_sender}
+
+    set {_suite_start} to now
+    delete {_test_times::*}
+
+    loop {_tests::*}:
+        wait 1 tick # Optimization for Skript, makes it async (prevents server lag)
+
+        set {_test_start} to now
+        set {_tests} to loop-index # Workaround for Skript bug: can't get size of {_tests::*}
+        delete {-current_test}, {-current_test::assert_number}, {-current_test::failed_asserts::*}
+
+        set {-current_test} to loop-value
+        replace "function ", ":" with "" in {-current_test}
+        eval "%{-current_test}%" # Dynamically run the test function
+
+        set {_test_end} to now
+        set {_test_times::%{-current_test}%} to difference between {_test_start} and {_test_end}
+
+        if {-current_test::failed_asserts::*} is not set:
+            continue
+
+        add {@fail_suite_message} to {_test_results::fail_messages::*}
+        loop {-current_test::failed_asserts::*}:
+            set {_test_results::failed} to ({_test_results::failed} ? 0) + 1
+            add {@fail_assert_message} to {_test_results::fail_messages::*}
+
+    set {_suite_end} to now
+    set {_suite_time} to difference between {_suite_start} and {_suite_end}
+
+    send {@suite_summary_message} to {_sender}
+    if {_test_results::failed} is not set:
+        send {@all_passed_message} to {_sender}
+        send {@empty_line_message} to {_sender}
+        stop
+
+    send {@failed_count_message} to {_sender}
+    send {@empty_line_message} to {_sender}
+
+    loop {_test_results::fail_messages::*}:
+        send loop-value to {_sender}
+    send {@empty_line_message} to {_sender}

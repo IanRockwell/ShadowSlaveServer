@@ -1,0 +1,42 @@
+# Directory where player YAML files are stored
+options:
+    directory: plugins/Skript/scripts/database/data/
+
+# Utility function to remove test files for a given UUID
+local function cleanup_test_files(uuid: text):
+    load yaml "{@directory}%{_uuid}%.yml" as "player-%{_uuid}%"
+    delete yaml "player-%{_uuid}%"
+
+# Test: Set and get a single value for a player
+function sktest_player_set_and_get_value():
+    # Generate a fake UUID and set a field value
+    set {_uuid} to "T%a random uuid%"
+    set {_field} to "coins"
+    set {_value} to 42
+    database_player_setvalue({_uuid}, {_field}, {_value}, true)
+    # Retrieve the value and assert correctness
+    set {_result} to database_player_getvalue({_uuid}, {_field})
+    assert(script, {_result}, {_value}, "Should retrieve the value just set")
+    cleanup_test_files({_uuid})
+
+# Test: Set and get a list for a player
+function sktest_player_set_and_get_list():
+    set {_uuid} to "T%a random uuid%"
+    set {_field} to "inventory"
+    set {_list::*} to "sword", "shield", "potion"
+    database_player_setlist({_uuid}, {_field}, {_list::*}, true)
+    # Retrieve the list and assert correctness
+    set {_result::*} to database_player_getlist({_uuid}, {_field})
+    assert(script, "%{_result::*}%", "%{_list::*}%", "Should retrieve the list just set")
+    cleanup_test_files({_uuid})
+
+# Test: Overwrite a value for a player and ensure the new value is stored
+function sktest_player_overwrite_value():
+    set {_uuid} to "T%a random uuid%"
+    set {_field} to "level"
+    database_player_setvalue({_uuid}, {_field}, 1, true)
+    database_player_setvalue({_uuid}, {_field}, 2, true)
+    # Retrieve the value and assert it was overwritten
+    set {_result} to database_player_getvalue({_uuid}, {_field})
+    assert(script, {_result}, 2, "Should overwrite previous value")
+    cleanup_test_files({_uuid})
